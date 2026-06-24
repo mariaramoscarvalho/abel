@@ -21,14 +21,14 @@ justify-content: center;
 }
 .cabecalho-imagem{
   width: 64px;
-    height: 64px;
-    object-fit: contain;
+  height: 64px;
+  object-fit: contain;
 }
 .titulo_site{
-padding: 50px;
+padding: 20px;
 text-align: center;
 width: 50%;
-font: 30px;
+font-size: 30px;
 }
 .sociais{
 display: flex;
@@ -37,8 +37,7 @@ width: 25%;
 padding-right: 30px;
 }
 .banner1{
-display: flex;
-justify-content: center;
+width: 100%;
 }
 .estudante_titulo{
 padding: 50px;
