@@ -37,6 +37,8 @@ display: flex;
 justify-content: flex-end;
 width: 25%;
 padding-right: 30px;
+width: 128px;
+height: 128px;
 }
 .banner1{
 width: 100%;
