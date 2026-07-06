@@ -41,34 +41,7 @@ padding-right: 30px;
 .banner1{
 width: 100%;
 }
-.estudante_titulo{
-padding: 50px;
-text-align: center;
 
-}
-.estudante-nome{
-text-align: center;
-}
-.estudante-imagem{
-width: 120px;
-}
-.estudante-icone{
-width: 38px;
-padding: 4px 8px;
-}
-.estudante{
-background-image: background-color(#faae43);
-padding: 24px 0;
-}
-
-.estudante.div{
-text-align: center;
-padding: 24px 0;
-}
-.estudantes_todos{
-display: flex;
-justify-content: space-around;
-}
 .escola{
 background-image: linear-gradient(#40A2E3,#7FC2EF);
 color: white;
