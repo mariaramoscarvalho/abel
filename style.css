@@ -7,7 +7,7 @@ body{
 font-family: "Poppins", sans-serif;
 }
 header{
-background-color: #A1BC98;
+background-color: #282928;
 color: F075AE;
 width: 100%;
 padding: 20px;
@@ -39,8 +39,8 @@ width: 25%;
 padding-right: 30px;
 }
 .social-icon {
-    width: 128px;
-    height: 128px;
+    width: 64px;
+    height: 64px;
     object-fit: contain;
 }
 .banner1{
