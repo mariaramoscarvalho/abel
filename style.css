@@ -30,7 +30,7 @@ padding: 20px;
 text-align: center;
 width: 50%;
 font-size: 30px;
-color:#c95aa7
+color:#c95aa7;
 font-family:cursive;
 }
 .sociais{
@@ -66,15 +66,36 @@ text-align: center;
 }
 .estudante_texto{
 text-align: center;
+font-size: 18px;
 }
-
 .logo_rodape{
 height: 80px;
 padding: 12px 0;
 
 }
-
 .link{
 color: #ffffff;
 text-decoration: none;
+}
+
+.localizacao {
+    width: 300px;
+    padding: 25px;
+    background: #f2f2f2;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.localizacao a {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #0066ff;
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+}
+
+.localizacao a:hover {
+    background: #0044aa;
 }
