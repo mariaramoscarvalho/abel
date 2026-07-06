@@ -37,8 +37,11 @@ display: flex;
 justify-content: flex-end;
 width: 25%;
 padding-right: 30px;
-width: 128px;
-height: 128px;
+}
+.social-icon {
+    width: 128px;
+    height: 128px;
+    object-fit: contain;
 }
 .banner1{
 width: 100%;
