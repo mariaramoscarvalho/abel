@@ -30,6 +30,7 @@ padding: 20px;
 text-align: center;
 width: 50%;
 font-size: 30px;
+color:#c95aa7
 font-family:cursive;
 }
 .sociais{
@@ -39,8 +40,8 @@ width: 25%;
 padding-right: 30px;
 }
 .social-icon {
-    width:32px;
-    height: 32px;
+    width:50px;
+    height: 50px;
     object-fit: contain;
 }
 .banner1{
@@ -61,6 +62,9 @@ padding: 50px;
 text-align: center;
 }
 .estudante_titulo{
+text-align: center;
+}
+.estudante_texto{
 text-align: center;
 }
 
