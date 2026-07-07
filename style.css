@@ -90,11 +90,14 @@ text-decoration: none;
     margin-top: 15px;
     padding: 10px 20px;
     background: #0066ff;
-    color: white;
     text-decoration: none;
     border-radius: 20px;
 }
 
 .localizacao a:hover {
     background: #0044aa;
+}
+.container-localizacao {
+    display: flex;
+    justify-content: center;
 }
