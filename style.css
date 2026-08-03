@@ -99,3 +99,33 @@ padding: 12px 0;
     display: flex;
     justify-content: center;
 }
+/* Centraliza o bloco e o título */
+.video-centralizado {
+    max-width: 800px; /* Largura máxima no computador */
+    margin: 0 auto;   /* Centraliza o bloco na tela */
+    padding: 20px;
+    text-align: center; /* Centraliza o título */
+}
+
+/* Deixa o título bonito */
+.video-centralizado h2 {
+    margin-bottom: 20px;
+}
+
+/* Mantém a proporção do vídeo (16:9) no celular e PC */
+.video-responsivo {
+    position: relative;
+    padding-bottom: 56.25%; /* Proporção de tela padrão */
+    height: 0;
+    overflow: hidden;
+}
+
+/* Força o iframe a se adaptar ao container */
+.video-responsivo iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
