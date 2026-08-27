@@ -2,7 +2,7 @@
 
 .navbar {
 overflow: hidden;
-background-color: #0b4f6c;
+background-color: #0e0006;
 display: flex;
 }
 
@@ -16,7 +16,7 @@ text-decoration: none;
 }
 
 .navbar a:hover {
-background-color: #1a936f;
+background-color: #000f0b;
 color: #ffffff;
 }
 
@@ -38,7 +38,7 @@ cursor: pointer;
 }
 
 .navbar a:hover, .dropdown:hover .dropbtn {
-background-color: #1a936f;
+background-color: #130106;
 color: #ffffff;
 }
 
