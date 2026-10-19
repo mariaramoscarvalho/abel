@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jogo da Cobrinha | Meu Site</title>
+  <meta name="description" content="Joguinho da cobrinha feito em canvas, direto no navegador." />
+  <style>
+    :root {
+      --fundo: #070d18;
+      --painel: #0f1a2b;
+      --borda: rgba(255, 255, 255, 0.08);
+      --texto: #e8eefb;
+      --suave: #93a4c0;
+      --verde: #5ee08a;
+      --verde-escuro: #22b573;
+      --vermelho: #ff5d73;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { height: 100%; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--texto);
+      background:
+        radial-gradient(900px 500px at 15% -10%, rgba(94, 224, 138, 0.16), transparent 60%),
+        radial-gradient(800px 500px at 90% 0%, rgba(80, 130, 255, 0.14), transparent 60%),
+        var(--fundo);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---------- Topo / navegação ---------- */
+    .topo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      max-width: 960px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 22px 20px 8px;
+    }
+
+    .marca {
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+      color: var(--texto);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .marca .ponto {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--verde);
+      box-shadow: 0 0 14px var(--verde);
+    }
+
+    .abas {
+      display: flex;
+      gap: 6px;
+      padding: 5px;
+      border: 1px solid var(--borda);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(8px);
+    }
+
+    .abas a {
+      text-decoration: none;
+      color: var(--suave);
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 999px;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .abas a:hover { color: var(--texto); }
+
+    .abas a.ativa {
+      color: #04240f;
+      background: linear-gradient(180deg, #7cf5a5, var(--verde-escuro));
+      box-shadow: 0 6px 18px rgba(94, 224, 138, 0.28);
+    }
+
+    /* ---------- Conteúdo ---------- */
+    main {
+      flex: 1;
+      width: 100%;
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 10px 20px 48px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: clamp(1.7rem, 5vw, 2.4rem);
+      letter-spacing: -0.03em;
+      margin: 22px 0 8px;
+    }
+
+    .sub {
+      color: var(--suave);
+      font-size: 0.95rem;
+      line-height: 1.55;
+      margin: 0 auto 22px;
+      max-width: 44ch;
+    }
+
+    kbd {
+      font-family: inherit;
+      font-size: 0.82em;
+      padding: 2px 7px;
+      border-radius: 6px;
+      border: 1px solid var(--borda);
+      border-bottom-width: 2px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--texto);
+      white-space: nowrap;
+    }
+
+    /* ---------- Placar ---------- */
+    .placar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      padding: 10px 14px;
+      border: 1px solid var(--borda);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .placar .item {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      line-height: 1.1;
+      min-width: 76px;
+    }
+
+    .placar .rotulo {
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--suave);
+    }
+
+    .placar strong {
+      font-size: 1.35rem;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.02em;
+    }
+
+    .placar .recorde strong { color: var(--verde); }
+
+    .botao {
+      font: inherit;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border-radius: 12px;
+      border: 1px solid var(--borda);
+      padding: 10px 18px;
+      color: var(--texto);
+      background: rgba(255, 255, 255, 0.06);
+      transition: transform 0.12s, background 0.2s, box-shadow 0.2s;
+      min-height: 42px;
+    }
+
+    .botao:hover { background: rgba(255, 255, 255, 0.12); }
+    .botao:active { transform: scale(0.97); }
+
+    .botao.principal {
+      color: #04240f;
+      border: 0;
+      padding: 13px 28px;
+      font-size: 1rem;
+      background: linear-gradient(180deg, #7cf5a5, var(--verde-escuro));
+      box-shadow: 0 10px 26px rgba(94, 224, 138, 0.3);
+    }
+
+    .botao.principal:hover { filter: brightness(1.06); }
+
+    /* ---------- Tabuleiro ---------- */
+    .palco {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--borda);
+      box-shadow: 0 30px 70px -30px rgba(0, 0, 0, 0.9), 0 0 0 6px rgba(255, 255, 255, 0.02);
+      background: var(--painel);
+      touch-action: none;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 24px;
+      text-align: center;
+      background: rgba(6, 12, 22, 0.76);
+      backdrop-filter: blur(6px);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.22s ease, visibility 0.22s;
+    }
+
+    .overlay.visivel {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .overlay h2 {
+      margin: 0;
+      font-size: clamp(1.4rem, 4.5vw, 1.9rem);
+      letter-spacing: -0.02em;
+    }
+
+    .overlay p {
+      margin: 4px 0 18px;
+      color: var(--suave);
+      font-size: 0.94rem;
+      line-height: 1.5;
+      max-width: 34ch;
+    }
+
+    .overlay strong { color: var(--verde); }
+
+    /* ---------- Botões direcionais (celular) ---------- */
+    .dpad {
+      display: grid;
+      grid-template-columns: repeat(3, 58px);
+      grid-template-rows: repeat(3, 58px);
+      justify-content: center;
+      gap: 8px;
+      margin: 18px auto 0;
+    }
+
+    .dpad button {
+      font: inherit;
+      font-size: 1.15rem;
+      color: var(--texto);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--borda);
+      border-radius: 14px;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .dpad button:active {
+      background: rgba(94, 224, 138, 0.28);
+      transform: scale(0.94);
+    }
+
+    .dpad .cima { grid-area: 1 / 2; }
+    .dpad .esq { grid-area: 2 / 1; }
+    .dpad .dir { grid-area: 2 / 3; }
+    .dpad .baixo { grid-area: 3 / 2; }
+
+    .dica {
+      color: var(--suave);
+      font-size: 0.82rem;
+      margin: 16px 0 0;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--suave);
+      font-size: 0.8rem;
+      padding: 0 20px 28px;
+    }
+
+    footer .coracao { color: var(--vermelho); }
+
+    @media (max-width: 420px) {
+      .placar .item { min-width: 62px; }
+      .dpad { grid-template-columns: repeat(3, 54px); grid-template-rows: repeat(3, 54px); }
+    }
+
+    @media (hover: hover) and (pointer: fine) and (min-width: 720px) {
+      .dpad { display: none; }
+      .dica .toque { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topo">
+    <a class="marca" href="index.html"><span class="ponto"></span> Meu Site</a>
+    <nav class="abas" aria-label="Navegação principal">
+      <a href="index.html">Início</a>
+      <a href="jogo.html" class="ativa" aria-current="page">Jogo</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Jogo da Cobrinha</h1>
+    <p class="sub">
+      Coma as frutas e cresça o máximo que puder. Não bata nas paredes nem 
