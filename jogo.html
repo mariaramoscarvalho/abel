@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jogo da Cobrinha | Meu Site</title>
+  <title>Jogo da Cobrinha</title>
   <meta name="description" content="Joguinho da cobrinha feito em canvas, direto no navegador." />
   <style>
     :root {
@@ -320,4 +320,147 @@
   <main>
     <h1>Jogo da Cobrinha</h1>
     <p class="sub">
-      Coma as frutas e cresça o máximo que puder. Não bata nas paredes nem 
+      Coma as frutas e cresça o máximo que puder. Não bata nas paredes nem no seu próprio rabo.
+    </p>
+
+    <div class="placar">
+      <div class="item">
+        <span class="rotulo">Pontos</span>
+        <strong id="pontos">0</strong>
+      </div>
+      <div class="item recorde">
+        <span class="rotulo">Recorde</span>
+        <strong id="recorde">0</strong>
+      </div>
+      <button id="btn-pausar" class="botao" type="button">Pausar</button>
+    </div>
+
+    <div class="palco">
+      <canvas id="tela" width="600" height="600" aria-label="Tabuleiro do jogo da cobrinha"></canvas>
+      <div id="overlay" class="overlay">
+        <h2 id="overlay-titulo">Jogo da Cobrinha</h2>
+        <p id="overlay-texto">Use as setas e coma as frutas.</p>
+        <button id="btn-acao" class="botao principal" type="button">Começar</button>
+      </div>
+    </div>
+
+    <div class="dpad" aria-label="Controles direcionais">
+      <button class="cima" data-dir="cima" type="button" aria-label="Para cima">↑</button>
+      <button class="esq" data-dir="esquerda" type="button" aria-label="Para a esquerda">←</button>
+      <button class="dir" data-dir="direita" type="button" aria-label="Para a direita">→</button>
+      <button class="baixo" data-dir="baixo" type="button" aria-label="Para baixo">↓</button>
+    </div>
+
+    <p class="dica">
+      <kbd>←</kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>→</kbd> ou <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> para mover
+      · <kbd>Espaço</kbd> pausa
+      <span class="toque">· no celular, arraste o dedo ou use as setas</span>
+    </p>
+  </main>
+
+  <footer>
+    Feito com <span class="coracao">♥</span> e JavaScript puro · hospedado no GitHub Pages
+  </footer>
+
+  <script>
+  (function () {
+    "use strict";
+
+    /* ---------- Configurações ---------- */
+    const COLUNAS = 20;
+    const LINHAS = 20;
+    const TAMANHO = 600;
+    const VELOCIDADE_INICIAL = 145;
+    const VELOCIDADE_MINIMA = 70;
+    const ACELERACAO = 4;
+    const CHAVE_RECORDE = "cobrinha-recorde";
+
+    /* ---------- Elementos ---------- */
+    const canvas = document.getElementById("tela");
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    const elPontos = document.getElementById("pontos");
+    const elRecorde = document.getElementById("recorde");
+    const elOverlay = document.getElementById("overlay");
+    const elTitulo = document.getElementById("overlay-titulo");
+    const elTexto = document.getElementById("overlay-texto");
+    const elAcao = document.getElementById("btn-acao");
+    const elPausar = document.getElementById("btn-pausar");
+
+    const CELULA = TAMANHO / COLUNAS;
+
+    /* ---------- Nitidez em telas retina ---------- */
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = TAMANHO * dpr;
+    canvas.height = TAMANHO * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    /* ---------- Estado do jogo ---------- */
+    const DIRECOES = {
+      cima: { x: 0, y: -1 },
+      baixo: { x: 0, y: 1 },
+      esquerda: { x: -1, y: 0 },
+      direita: { x: 1, y: 0 }
+    };
+
+    let estado = "pronto";
+    let cobra = [];
+    let anterior = [];
+    let direcao = DIRECOES.direita;
+    let fila = [];
+    let comida = { x: 10, y: 10 };
+    let pontos = 0;
+    let recorde = 0;
+    let acumulado = 0;
+    let ultimoTempo = 0;
+
+    try {
+      recorde = parseInt(localStorage.getItem(CHAVE_RECORDE) || "0", 10) || 0;
+    } catch (e) {
+      recorde = 0;
+    }
+    if (elRecorde) elRecorde.textContent = recorde;
+
+    const passoAtual = () =>
+      Math.max(VELOCIDADE_MINIMA, VELOCIDADE_INICIAL - pontos * ACELERACAO);
+
+    /* ---------- Som ---------- */
+    let audioCtx = null;
+    function bip(frequencia, duracao, volume) {
+      try {
+        if (!audioCtx) {
+          const AC = window.AudioContext || window.webkitAudioContext;
+          if (!AC) return;
+          audioCtx = new AC();
+        }
+        if (audioCtx.state === "suspended") audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const ganho = audioCtx.createGain();
+        osc.type = "triangle";
+        osc.frequency.value = frequencia;
+        ganho.gain.value = volume;
+        ganho.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duracao);
+        osc.connect(ganho).connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duracao);
+      } catch (e) {}
+    }
+
+    /* ---------- Preparar partida ---------- */
+    function reiniciar() {
+      cobra = [
+        { x: 5, y: 10 },
+        { x: 4, y: 10 },
+        { x: 3, y: 10 }
+      ];
+      anterior = cobra.map((p) => ({ x: p.x, y: p.y }));
+      direcao = DIRECOES.direita;
+      fila = [];
+      pontos = 0;
+      acumulado = 0;
+      if (elPontos) elPontos.textContent = "0";
+      sortearComida();
+    }
+
+    function sortearComida() 
